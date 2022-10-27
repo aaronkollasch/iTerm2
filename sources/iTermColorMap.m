@@ -252,9 +252,9 @@ const int kColorMapAnsiBrightModifier = 8;
                            alpha:_mutingAmount];
 
     CGFloat dimmedRgb[4];
-    CGFloat grayRgb[] = { _backgroundBrightness, _backgroundBrightness, _backgroundBrightness };
-    if (!_dimOnlyText) {
-        grayRgb[0] = grayRgb[1] = grayRgb[2] = 0.5;
+    CGFloat grayRgb[] = { 0.0, 0.0, 0.0 };
+    if (!_dimOnlyText && _backgroundBrightness > 0.5) {
+        grayRgb[0] = grayRgb[1] = grayRgb[2] = 0.6;
     }
     [iTermColorMap getComponents:dimmedRgb
            byAveragingComponents:mutedRgb
@@ -333,9 +333,9 @@ const int kColorMapAnsiBrightModifier = 8;
     [color getComponents:components];
 
     CGFloat dimmedRgb[4];
-    CGFloat grayRgb[] = { backgroundBrightness, backgroundBrightness, backgroundBrightness };
+    CGFloat grayRgb[] = { 0.0, 0.0, 0.0 };
     if (!dimOnlyText) {
-        grayRgb[0] = grayRgb[1] = grayRgb[2] = 0.5;
+        grayRgb[0] = grayRgb[1] = grayRgb[2] = (backgroundBrightness > 0.5)? 0.6 : 0.0;
     }
     [iTermColorMap getComponents:dimmedRgb
            byAveragingComponents:components
@@ -367,8 +367,13 @@ const int kColorMapAnsiBrightModifier = 8;
 - (vector_float4)fastProcessedBackgroundColorForBackgroundColor:(vector_float4)backgroundColor {
     vector_float4 defaultBackgroundComponents = [self fastColorForKey:kColorMapBackground];
     const vector_float4 mutedRgb = [self fastAverageComponents:backgroundColor with:defaultBackgroundComponents alpha:_mutingAmount];
-    vector_float4 grayRgb = { 0.5, 0.5, 0.5, 1 };
-
+    vector_float4 grayRgb;
+    if (_backgroundBrightness > 0.5) {
+        grayRgb = (vector_float4){ 0.6, 0.6, 0.6, 1 };
+    }
+    else {
+        grayRgb = (vector_float4){ 0.0, 0.0, 0.0, 1 };
+    }
     BOOL shouldDim = !_dimOnlyText && _dimmingAmount > 0;
     // If dimOnlyText is set then text and non-default background colors get dimmed toward black.
     if (_dimOnlyText) {
@@ -377,12 +382,6 @@ const int kColorMapAnsiBrightModifier = 8;
          fabs(backgroundColor.y - defaultBackgroundComponents.y) < 0.01 &&
          fabs(backgroundColor.z - defaultBackgroundComponents.z) < 0.01);
         if (!isDefaultBackgroundColor) {
-            grayRgb = (vector_float4){
-                (float)_backgroundBrightness,
-                (float)_backgroundBrightness,
-                (float)_backgroundBrightness,
-                1
-            };
             shouldDim = YES;
         }
     }
@@ -419,7 +418,9 @@ const int kColorMapAnsiBrightModifier = 8;
                            alpha:_mutingAmount];
 
     CGFloat dimmedRgb[4];
-    CGFloat grayRgb[] = { 0.5, 0.5, 0.5 };
+    CGFloat gray = (_backgroundBrightness > 0.5)? 0.6 : 0.1;
+    CGFloat grayRgb[] = { gray, gray, gray };
+
     BOOL shouldDim = !_dimOnlyText && _dimmingAmount > 0;
     // If dimOnlyText is set then text and non-default background colors get dimmed toward black.
     if (_dimOnlyText) {
@@ -428,9 +429,6 @@ const int kColorMapAnsiBrightModifier = 8;
              fabs(backgroundRgb[1] - defaultBackgroundComponents[1]) < 0.01 &&
              fabs(backgroundRgb[2] - defaultBackgroundComponents[2]) < 0.01);
         if (!isDefaultBackgroundColor) {
-            for (int j = 0; j < 3; j++) {
-                grayRgb[j] = _backgroundBrightness;
-            }
             shouldDim = YES;
         }
     }

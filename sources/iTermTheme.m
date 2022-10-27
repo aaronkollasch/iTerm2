@@ -273,10 +273,10 @@
         if (inactive && !dimOnlyText) {
             if (PSMShouldExtendTransparencyIntoMinimalTabBar()) {
                 return [[color colorDimmedBy:adjustedDimmingAmount
-                            towardsGrayLevel:0.5] colorWithAlphaComponent:transparencyAlpha];
+                            towardsGrayLevel:0.1] colorWithAlphaComponent:transparencyAlpha];
             } else {
                 return [color colorDimmedBy:adjustedDimmingAmount
-                           towardsGrayLevel:0.5];
+                           towardsGrayLevel:0.1];
             }
         } else {
             if (PSMShouldExtendTransparencyIntoMinimalTabBar()) {
