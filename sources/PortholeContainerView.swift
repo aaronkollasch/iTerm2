@@ -49,7 +49,7 @@ class PortholeContainerView: NSView {
     var backgroundColor = NSColor.textBackgroundColor {
         didSet {
             let dimmed = backgroundColor.usingColorSpace(.sRGB)!.colorDimmed(by: 0.2,
-                                                                             towardsGrayLevel: 0.1)
+                                                                             towardsGrayLevel: 0.5)
             layer?.backgroundColor = dimmed.cgColor
         }
     }

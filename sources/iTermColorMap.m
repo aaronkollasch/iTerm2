@@ -418,7 +418,7 @@ const int kColorMapAnsiBrightModifier = 8;
                            alpha:_mutingAmount];
 
     CGFloat dimmedRgb[4];
-    CGFloat gray = (_backgroundBrightness > 0.5)? 0.6 : 0.1;
+    CGFloat gray = (_backgroundBrightness > 0.5)? 0.6 : 0.0;
     CGFloat grayRgb[] = { gray, gray, gray };
 
     BOOL shouldDim = !_dimOnlyText && _dimmingAmount > 0;
